@@ -1,0 +1,261 @@
+---
+title: "PL4246_Project"
+author: "Bhuvanesh Wadhwani"
+date: "2023-02-16"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+#loading necessary libraries
+```{r libraries}
+
+packages_to_use<- c("tidyverse", "igraph", "igraphdata", "qgraph", "influenceR") #packages to use. if installed, load. if not installed, install then load. 
+
+for(i in packages_to_use){
+  if( ! i %in% rownames(installed.packages())  ) {
+    print(paste(i, "not installed; installing now:\n") )
+    install.packages(i)
+  }
+  
+  require(i, character.only = TRUE)
+}
+
+```
+
+
+
+
+#loading file 
+```{r}
+
+gossip.dat <- read.csv("data_final.csv", header = TRUE, row.names = 1) #loading gossip file that contains negative and positive gossip data
+
+```
+
+
+```{r negative gossip}
+
+ng.dat <- gossip.dat %>%
+  select(NegGosF1R:NegGosM21R) #selecting columns for negative gossip from file
+
+head(ng.dat) #check if the correct columns were selected
+
+ng.mat <- as.matrix(ng.dat) #convert to matrix
+ng.am <- graph_from_adjacency_matrix(ng.mat, mode = "undirected") #convert into igraph object and make sure it is undirected. It should be unweighted by default, so no code needed to run that. 
+
+ng.am <- simplify(ng.am) #making sure there is only 1 edge between each pair of nodes to remove instances of A -> B and B -> A counting as 2 edges rather than 1. 
+is.simple(ng.am) #check simplify function
+
+summary(ng.am) #summary of igraph object
+#44 nodes, 264 edges
+```
+
+#visualization ng
+```{r, fig.height = 8, fig.width = 8}
+par(mar=c(0,0,0,0)+.1)  #reduce borders
+set.seed(111) #set seed for the same graph layout for reproducability
+
+#plot negative gossip for visualization
+plot(ng.am, layout = layout_with_graphopt(ng.am), #layout to view the graph
+     vertex.frame.color = 'black', 
+     vertex.label.family = 'sans', #readable font
+     vertex.size = 8, 
+     vertex.color = 'white', 
+     vertex.label.cex = 0.7)
+
+```
+
+```{r positive gossip}
+
+pg.dat <- gossip.dat %>%
+  select(PosGosF1R:PosGosM21R) #selecting columns for positive gossip. 
+
+head(pg.dat) #check if the correct columns were selected
+
+pg.mat <- as.matrix(pg.dat) #convert to matrix
+pg.am <- graph_from_adjacency_matrix(pg.mat, mode = "undirected") #convert into igraph object and make sure it is undirected. It should be unweighted by default, so no code needed to run that.
+
+pg.am <- simplify(pg.am) #making sure there is only 1 edge between each pair of nodes to remove instances of A -> B and B -> A counting as 2 edges rather than 1.
+is.simple(pg.am) #check simplify function
+
+summary(pg.am) #summary of igraph object
+#44 nodes, 475 edges
+```
+
+#visualization pg
+```{r, fig.height = 8, fig.width = 8}
+par(mar=c(0,0,0,0)+.1) #reduce borders
+set.seed(111) #set seed for reproducability 
+
+plot(pg.am, layout = layout_with_graphopt(pg.am), 
+     vertex.frame.color = 'black',
+     vertex.label.family = 'sans',
+     vertex.size = 8, 
+     vertex.color = 'white', 
+     vertex.label.cex = 0.7)
+
+```
+
+
+```{r key player analyses}
+set.seed(111) #set seed for reproducability  
+keyplayer_ng <- keyplayer(ng.am, k = 4) #KPP-Pos. selecting 4 key players from 44 nodes from negative gossip network. 4 was chosen as an estimated number. 
+print(keyplayer_ng) #show the 4 key players negative gossip network
+#F12, F23, M3, M12
+
+
+set.seed(111) #set seed for reproducability
+keyplayer_pg <- keyplayer(pg.am, k = 4) #KPP-Pos. same as above, but for positive gossip network. 4 was chosen again as an estimated number
+print(keyplayer_pg) #show the 4 key players in positive gossip network
+#F12, F16, F17, M2
+
+```
+
+
+#visualization ng key player analysis
+```{r, fig.height = 10, fig.width = 10}
+# color nodes with highest scores 
+V(ng.am)$color <- 'skyblue' #node color
+V(ng.am)[keyplayer_ng]$color <- 'limegreen' #select different color for key players to view in the graph 
+
+par(mar=c(0,0,0,0)+.1) #reduce borders
+
+plot(ng.am, layout = layout_with_graphopt(ng.am), 
+     vertex.frame.color = 'black', 
+     vertex.label.family = 'sans',
+     vertex.size = 8, 
+     vertex.color = V(ng.am)$color, 
+     vertex.label.cex = 0.8,
+     vertex.label.color = 'black')
+
+
+```
+
+
+#visualization pg key player analysis
+```{r, fig.height = 10, fig.width = 10}
+# color nodes with highest scores 
+V(pg.am)$color <- 'skyblue' #node color
+V(pg.am)[keyplayer_ng]$color <- 'limegreen' #select different colors for key players to view in the graph  
+
+par(mar=c(0,0,0,0)+.1) #reduce borders
+
+plot(pg.am, layout = layout_with_graphopt(pg.am), 
+     vertex.frame.color = 'black', 
+     vertex.label.family = 'sans',
+     vertex.size = 7, 
+     vertex.color = V(pg.am)$color, 
+     vertex.label.cex = 0.8,
+     vertex.label.color = 'black')
+
+
+```
+
+
+
+
+```{r ENS ng}
+ens_data_ng <- data.frame(node = V(ng.am)$name,
+                            ens_score_ng = ens(ng.am)) #ens scores for negative gossip. Getting ens scores (code: ens(ng.am)) with node name (code: V(ng.am)$name), and putting it into a data frame. 
+
+# top 4 ens nodes 
+arrange(ens_data_ng, -ens_score_ng) %>% head(4) #filter in descending order (code: -ens_score_ng) and show the top 4 nodes with the highest ens scores (code: head(4)) 
+#M12, F12, F21, M3
+
+```
+
+
+#visualization ng ENS
+```{r, fig.height = 8, fig.width = 8}
+# color nodes with highest ENSes 
+V(ng.am)$color <- 'skyblue'
+V(ng.am)[name %in% c('NegGosM12R', 'NegGosF12R', 'NegGosF21R', 'NegGosM3R')]$color <- 'green' #highest ens nodes color
+
+par(mar=c(0,0,0,0)+.1)  #reduce borders
+
+plot(ng.am, 
+     layout = layout_with_graphopt(ng.am), 
+     vertex.frame.color = 'black', 
+     vertex.label.family = 'sans',
+     vertex.size = 8, 
+     vertex.color = V(ng.am)$color, 
+     vertex.label.cex = 0.6,
+     vertex.label.color = 'black')
+```
+
+
+
+```{r ENS pg}
+ens_data_pg <- data.frame(node = V(pg.am)$name,
+                            ens_score_pg = ens(pg.am)) #ens scores for positive gossip. Getting ens scores (code: ens(pg.am)) with node name (code: V(pg.am)$name), and putting it into a data frame.
+
+# top 4 ens nodes
+arrange(ens_data_pg, -ens_score_pg) %>% head(4) #filter in descending order (code: -ens_score_pg) and show the top 4 nodes with the highest ens scores (code: head(4))
+
+#F2, F12, M12, F7
+
+```
+
+#visualization pg ENS
+```{r, fig.height = 8, fig.width = 8}
+# color nodes with highest ENSes 
+V(pg.am)$color <- 'skyblue'
+V(pg.am)[name %in% c('PosGosF2R', 'PosGosF12R', 'PosGosM12R', 'PosGosF7R')]$color <- 'green' #highest ens nodes color
+
+par(mar=c(0,0,0,0)+.1) 
+
+plot(pg.am, 
+     layout = layout_with_graphopt(pg.am), 
+     vertex.frame.color = 'black', 
+     vertex.label.family = 'sans',
+     vertex.size = 8, 
+     vertex.color = V(pg.am)$color, 
+     vertex.label.cex = 0.6,
+     vertex.label.color = 'black')
+```
+
+
+
+
+#centrality measures for negative network
+```{r}
+
+degree(ng.am) |> sort(decreasing = T) |> head(4) #top 4 node degree in negative gossip network. Done by sorting in decreasing order (code: sort(decreasing = T) then showing top 4 scores (code: head(4)). 
+
+closeness(ng.am)|> sort(decreasing = T) |> head(4) #top 4 node closeness in negative gossip network.Done by sorting in decreasing order (code: sort(decreasing = T) then showing top 4 scores (code: head(4)). 
+
+#Top 4 for both degree and closeness = M12, F12, M5, F21. Both showed the same 4.
+
+```
+#centrality measures for positive network
+```{r}
+
+degree(pg.am) |> sort(decreasing = T) |> head(4) #top 4 node degree in positive gossip network. Done by sorting in decreasing order (code: sort(decreasing = T) then showing top 4 scores (code: head(4)). 
+
+closeness(pg.am)|> sort(decreasing = T) |> head(4) #top 4 node closeness in positive gossip network. Done by sorting in decreasing order (code: sort(decreasing = T) then showing top 4 scores (code: head(4)). 
+
+#Top 4 for both degree and closeness = F2, F12, M12, M7. Both showed the same 4.
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
