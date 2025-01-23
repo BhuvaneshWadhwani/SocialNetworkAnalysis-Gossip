@@ -1,19 +1,33 @@
-# Social Network Analysis - Gossip
-This is a university project using Social Network Analysis to explore gossip spread among a group of college students. This project was done in RMarkDown. The html file has also been added so that you can view the output without running the code.<br /> The dataset can be found here: https://data.mendeley.com/datasets/kpjjvg39k3/4.<br /> 
-Please feel free to leave any feedback :) 
+# Social Network Analysis - Gossip Spread
 
-# Part 1: Data Description
-  Convert both negative and positive gossip dataframes into igraph object <br />
-  Create visualization for both <br />
+## Project Overview
+This university project leverages Social Network Analysis (SNA) to explore the dynamics of gossip spread among a group of college students. The analysis focuses on both positive and negative gossip networks, examining key players, network size, and centrality measures. The project was conducted in RMarkdown, and the HTML output file is included for convenient viewing without running the code.
 
-# Part 2: Key Player Analysis (KPA)
-  KPA for both negative and positive gossip data <br />
-  Create visualization for both <br />
+## Dataset
+The dataset used for this analysis is available on Mendeley: [Gossip Spread Dataset](https://data.mendeley.com/datasets/kpjjvg39k3/4).
 
-# Part 3: Effective Network Size (ENS)
-  ENS for both negative and positive gossip data <br />
-  Create visualization for both <br />
+## Project Structure
 
-# Part 4: Centrality Measures
-  Centrality measures for both negative and positive gossip data (node degree and closeness)
-  
+### Part 1: Data Description
+- Convert both negative and positive gossip dataframes into `igraph` objects.
+- Create visualizations for both networks.
+
+### Part 2: Key Player Analysis (KPA)
+- Perform Key Player Analysis for both negative and positive gossip networks.
+- Generate visualizations to highlight key players.
+
+### Part 3: Effective Network Size (ENS)
+- Calculate the Effective Network Size for both negative and positive gossip networks.
+- Visualize the results to understand network efficiency.
+
+### Part 4: Centrality Measures
+- Compute centrality measures (node degree and closeness) for both negative and positive gossip networks.
+
+## How to Use
+1. Clone the repository.
+2. Open the RMarkdown file in your preferred R environment.
+3. Run the code chunks sequentially to reproduce the analysis.
+4. Alternatively, view the HTML file for a quick summary of results.
+
+## Feedback
+Your feedback is always welcome! Feel free to share any suggestions or improvements you might have.
