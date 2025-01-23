@@ -1,4 +1,4 @@
-# SocialNetworkAnalysis-Gossip
+# Social Network Analysis - Gossip
 This is a university project using Social Network Analysis to explore gossip spread among a group of college students. This project was done in RMarkDown. The html file has also been added so that you can view the output without running the code.<br /> The dataset can be found here: https://data.mendeley.com/datasets/kpjjvg39k3/4.<br /> 
 Please feel free to leave any feedback :) 
 
