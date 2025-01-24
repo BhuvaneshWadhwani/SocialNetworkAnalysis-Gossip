@@ -34,7 +34,7 @@ For exact replication of results or to access the pre-processed dataset, please 
 1. Clone the repository.
 2. Open the RMarkdown file in your preferred R environment.
 3. Run the code chunks sequentially to reproduce the analysis.
-4. Alternatively, view the HTML file for a quick summary of results.
+4. Alternatively, view the HTML or Markdown (.md) file for a quick summary of results.
 
 ## Feedback
 Your feedback is always welcome! Feel free to share any suggestions or improvements you might have.
