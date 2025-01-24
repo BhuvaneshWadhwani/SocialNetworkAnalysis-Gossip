@@ -8,7 +8,7 @@ The original dataset used for this analysis is available on Mendeley: [Gossip Sp
 
 Note on Data Preparation:
 - The dataset used in this project was pre-processed in Excel before analysis in R.
-- Pre-processing included minor data cleaning (e.g., filling in blank cells).
+- Pre-processing included minor data cleaning (e.g., filling in blank cells with 0).
 - The R code in this repository uses this pre-processed version of the dataset.
 
 For exact replication of results or to access the pre-processed dataset, please contact the repository owner.
