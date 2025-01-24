@@ -1,7 +1,7 @@
 # Social Network Analysis - Gossip Spread
 
 ## Project Overview
-This university project leverages Social Network Analysis (SNA) to explore the dynamics of gossip spread among a group of college students. The analysis focuses on both positive and negative gossip networks, examining key players, network size, and centrality measures. The project was conducted in RMarkdown, and the HTML output file is included for convenient viewing without running the code.
+This university project leverages Social Network Analysis (SNA) to explore the dynamics of gossip spread among a group of college students. The analysis focuses on both positive and negative gossip networks, examining key players, network size, and centrality measures. The project was conducted in RMarkdown (.rmd), and the HTML and Markdown (.md) output file is included for convenient viewing without running the code.
 
 ## Dataset
 The dataset used for this analysis is available on Mendeley: [Gossip Spread Dataset](https://data.mendeley.com/datasets/kpjjvg39k3/4).
